@@ -1,0 +1,236 @@
+---
+title: "O Fantástico Mundo do R - Parte I"
+author: "Prof. Gérson Santos - GeoTec/UFV"
+fig_caption: yes
+output:
+  html_document:
+    highlight: pygments
+    keep_md: yes
+    lib_dir: libs
+    mathjax: local
+    number_sections: yes
+    self_contained: no
+    theme: cerulean
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+  word_document:
+    toc: yes
+  pdf_document:
+    toc: yes
+fig_width: 7
+fig_height: 7
+editor_options:
+  chunk_output_type: console
+---
+
+> **ATENÇÃO:**
+> Antes de qualquer outra instrução devemos fazer 2 procedimentos:
+> 
+> 1. Clicar em `File`, `Reopen with Encoding ...` e selecionar `UTF-8`;
+> 2. Clicar em `File`, `Save with Encoding ...` e selecionar a opção com os dizeres `System Default`.
+
+# - Introdução Geral
+
+## - Um breve histórico
+
+É relevante dizer que o R é um programa/linguagem, doravante somente R, para análise de dados (bastante relevante nesse momento da história em que tanto se fala de Data Science).
+
+O R foi inspirado no Programa/Linguagem S. O Programa S é uma linguagem que foi desenvolvida por John Chambers e outros no Bell Laboratories, originalmente parte da AT & T Corp. O Programa S foi iniciado em 1976 como um ambiente para análises estatísticas, sendo originalmente implementado como bibliotecas Fortran. As primeiras versões não continham funções para modelagem estatística.
+
+Em 2016, foi comemorado 16 anos do R. Assim, podemos estabelecer o seguinte timeline:
+
+* 1993: Research project in Auckland, NZ - Robert Ihaka and Ross Gentleman;
+* 1995: R Released as open-source software;
+* 1997: R core group formed;
+* 2000: R 1.0.0 released (February 29);
+* 2003: R Foundation founded;
+* 2004: First international user conference in Vienna;
+* 2015: R Consortium founded.
+
+Fonte: [16 anos de R](http://blog.revolutionanalytics.com/2016/03/16-years-of-r-history.html).
+
+## - Vantagens do R
+
+Podemos destacar algumas características:
+
+* gratuito;
+* código aberto e disponível em todas as principais plataformas;
+* reprodutível;
+* crescimento exponencial de pacotes;
+* diversidade de metodologias (modelagem estatística, aprendizado de máquina, entre outros);
+* liberdade de criação;
+* acesso imediato às novas metodologias;
+* entre outras.
+
+Vale ressaltar o grande apoio que temos em comunidades nacionais e internacionais:
+
+* Listas de discussão;
+* GitHub;
+* Stackoverflow;
+* Redes sociais;
+* Websites interativos.
+
+## - Desvantagens do R
+
+Como esta é uma questão subjetiva, destacarei o que considero desvantagem:
+
+* quase tudo em Inglês;
+* uso frequente de linhas de comando;
+* help um pouco confuso;
+* necessita de condicionamento.
+
+## - Editores do R
+
+Neste curso trabalharemos com um editor bastante utilizado no mundo chamado RStudio, conforme layout apresentado na figura abaixo.
+
+![Figura: Layout do editor RStudio](rstudio.png)
+
+# - Primeiros Passos no R
+
+## - Mudando o diretório de trabalho
+
+**Importante:** Para configurar seu diretório de trabalho, clique em `Session`, `Set Working Directory` e `Choose Directory`. Então, navegue até sua pasta e clique em `Open`. O comando `setwd` que vai aparecer no Console do R deve ser copiado e colado no chunk abaixo:
+
+```{r}
+getwd()
+setwd("")
+getwd()
+```
+
+**Obs.:** O endereço do diretório que está no comando `setwd()` é o endereço de minha máquina, então vc deverá substituir pelo endereço de sua máquina.
+
+## - Operações básicas
+
+Por mais infantis que pareçam os comandos abaixo, quando eles se conectam com outros conhecimentos se transformam em poderosos sistemas. Vejamos alguns:
+
+```{r}
+a=1+2+3
+a
+```
+
+**Obs.:** Notem que foram necessárias duas linhas para o processamento e exibição do resultado.
+
+A partir de agora, usaremos apenas uma linha para o processamento e exibição do resultado. Vejamos como:
+
+```{r}
+(b=2-3*4)
+(c=3/2+1)
+(d=4*3^3)
+(e=sqrt(16))  
+(f=sqrt(25))
+(g=sqrt(20))
+(katia=8^(1/3))
+(resp1=a+b+c)
+(resp2=e*f*g)
+```
+
+**Obs.:** Notem que nas 3 últimas linhas do chunk acima as operações foram realizadas com os nomes dos objetos. Outra coisa, qdo trabalhamos com os objetos é comum acontecer sobreposições, logo deve-se tomar cuidado.
+
+O comando abaixo é bastante relevante para que não aconteça sobreposições de nomes de objetos no R.
+
+```{r}
+ls()
+```
+
+## - Trabalhando com matrizes
+
+Podemos criar matrizes de algumas maneiras. Abordaremos aqui usando vetores:
+
+```{r}
+(dados=c(2,3,1,0,-1,0.5)) # c é o comando concatenate
+mode(dados) # mode mostra a caracteristica da informaçao
+length(dados)
+(mat.1=matrix(dados,2,3))
+dim(mat.1)
+```
+
+**Seu comentário:**
+
+
+Podemos preencher a matriz de outra maneira:
+
+```{r}
+(mat.2=matrix(dados,ncol=3,byrow=TRUE))
+dim(mat.2)
+summary(mat.1)      # Resumo por coluna
+summary(mat.2)
+summary(dados)  # Resumo de toda a matriz
+```
+
+**Seu comentário:**
+
+Algumas vezes precisamos operacionalizar matrizes. Logo, os comandos abaixo podem ser úteis:
+
+```{r}
+t(mat.1)            # transposta da Matriz
+(res = t(mat.1)%*%mat.1)        # Produto matricial M'M
+```
+
+**Seu comentário:**
+
+Vamos aproveitar o objeto `res` e aprender como acessar os componentes de uma matriz:
+
+```{r}
+class(res)
+attributes(res)
+dim(res)
+(res = matrix(1:9, nrow = 3, dimnames = list(c("X","Y","Z"), c("A","B","C"))))
+colnames(res)
+rownames(res)
+colnames(res) = c("c1", "c2", "c3")
+res
+rownames(res) = c("l1", "l2", "l3")
+res
+res[2,]
+res["l2",]
+res[,2]
+res[[2]]
+res[c(1,3),]
+```
+
+**Seu comentário:**
+
+## - Algumas funções úteis
+
+As funções abaixo foram criadas pelos desenvolvedores dos pacotes do R que estamos utilizando no momento:
+
+```{r}
+round(1/123,2)     # Importante comando ROUND
+round(1/123,3)
+round(1/123,4)
+signif(1/123,3)    
+```
+
+**Seu comentário:**
+
+## - Algumas respostas interessantes:
+
+```{r}
+2/0
+0/0
+(pesos=c(62,NA,76,93,49))
+is.na(pesos)
+```
+
+**Seu comentário:**
+
+## - Inserindo dados no R
+
+Conforme mostrado no início, o R está muito relacionado com a análise de dados. Assim, inserir os dados no R é uma tarefa corriqueira. Vejamos algumas maneiras:
+
+```{r}
+(direto1=c(1,2,3,4,5))
+(direto2=1:10)
+(direto3=10:2)
+(direto4=seq(1,10,1))
+(direto5=seq(1,10,2))
+#(direto6=seq(10,2,3))      # Observe o erro
+(direto7=seq(10,2,-3))
+(direto8=rep(1,5))
+(direto9=rep(c(2,3),5))
+(direto10=c(rep(1,10), rep(3,2)))
+```
+
+Para a próxima parte do curso faremos uma importação de dados para alguns formatos bem práticos.
