@@ -4,10 +4,6 @@ author: "Erich Müller Dutra - Matrícula 4908"
 date: "2022-11-07"
 fig_caption: yes
 output:
-  pdf_document:
-    toc: yes
-  word_document:
-    toc: yes
   html_document:
     highlight: pygments
     keep_md: yes
@@ -20,6 +16,10 @@ output:
     toc_float:
       collapsed: no
       smooth_scroll: yes
+  word_document:
+    toc: yes
+  pdf_document:
+    toc: yes
 fig_width: 7
 fig_height: 7
 editor_options:
@@ -35,5 +35,3 @@ Aqui colocarei um texto sobre meu trabalho
 Aqui colocarei um texto mostrando o objetivo da regressão que estou fazendo com esses dados.
 
 # - Descrição das Variáveis
-
-Aqui precisa ter um parágrado descrevendo 
