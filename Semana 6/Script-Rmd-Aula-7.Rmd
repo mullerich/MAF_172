@@ -4,6 +4,10 @@ author: "Erich Müller Dutra - Matrícula 4908"
 date: "2022-11-07"
 fig_caption: yes
 output:
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
   html_document:
     highlight: pygments
     keep_md: yes
@@ -16,10 +20,6 @@ output:
     toc_float:
       collapsed: no
       smooth_scroll: yes
-  word_document:
-    toc: yes
-  pdf_document:
-    toc: yes
 fig_width: 7
 fig_height: 7
 editor_options:
@@ -28,7 +28,7 @@ editor_options:
 
 # - Introdução
 
-Nesta seção, estudamos a relação entre diferentes variáveis aplicadas à ciência de dados no R. Neste trabalho, investiguei a relação entre notas de corte para acesso ao curso de administração através do SiSU, investimentos educacionais e população da cidade em questão. Foram coletadas 8 amostras através de dados públicos disponíveis na plataforma do SiSU, portal da transparência e IBGE.
+Nesta seção, estudamos a relação entre diferentes variáveis aplicadas à ciência de dados no R. Neste trabalho, investiguei a relação entre notas de corte para acesso ao curso de administração através do SiSU, investimentos educacionais, população e IDH. Foram coletadas 8 amostras através de dados públicos disponíveis na plataforma do SiSU, portal da transparência e IBGE.
 
 # - Objetivo
 
@@ -38,16 +38,16 @@ A principal motivação é estudar se há relação direta entre dados das local
 
 ## - Fonte
 Os dados coletados foram obtidos através das seguintes fontes:
-https://sisu.mec.gov.br/#/relatorio#onepage
-https://cidades.ibge.gov.br
-https://www.portaltransparencia.gov.br/funcoes/12-educacao?ano=2020
+* https://sisu.mec.gov.br/#/relatorio#onepage
+* https://cidades.ibge.gov.br
+* https://www.portaltransparencia.gov.br/funcoes/12-educacao?ano=2020
 
 ## - Preparação do ambiente
 A partir daqui, iremos analisar a relação entre as variáveis. Inicialmente, vamos preparar o ambiente.
 
 ```{r}
 # Define o diretório de trabalho
-# setwd("~Documents/Erich/GitHub/MAF_172") 
+#setwd("~Documents/Erich/GitHub/MAF_172") 
 
 # Instalando dependências
 library(pacman)
@@ -70,8 +70,10 @@ names(dados.rls)
 
 ## - Processamento dos dados
 
+Vamos agora processar os dados obtidos de três formas, sendo duas delas através de correlação de matriz linear e a outra como correlação não linear.
+
+### - Matriz de correlação linear
 ```{r}
-# Processamento Paralelo e Matriz de Correlacao
 
 # Processamento em paralelo
 cl <- makePSOCKcluster(4)
@@ -84,34 +86,27 @@ corrplot(df2, order="alphabet", method="circle", tl.pos="td", type="upper",
          sig.level=0.995, p.mat = 1-abs(df2),insig = "blank")
 # Aqui termina o procedimento
 stopCluster(cl)
+```
 
-######################################################################
-### Outra Matriz de Correlacao
-######################################################################
+Nessa análise, pudemos observar que a maior relação linear encontrada se dá entre a nota de corte e o IDH.
+
+### - Outra Matriz de correlação linear
+
+```{r}
+# Outra Matriz de Correlacao
 
 cl <- makePSOCKcluster(4); registerDoParallel(cl)
 # Aqui começa o procedimento
 ggpairs(dados.rls)
 # Aqui termina o procedimento
 stopCluster(cl)
+```
 
-######################################################################
-### Subprocessamento dos Dados
-######################################################################
+Através dessa matriz, podemos ver como os dados se relacionam e o grau de correlação.
 
-temp.1 = dados.rls[1:10]
-temp.2 = dados.rls[11:20]
-# Processamento em paralelo
-cl <- makePSOCKcluster(4); registerDoParallel(cl)
-# Aqui começa o procedimento
-ggpairs(temp.1)
-ggpairs(temp.2)
-# Aqui termina o procedimento
-stopCluster(cl)
+### - Matriz de correlação não linear
 
-######################################################################
-### Matriz de Correlacao Nao-Linear
-######################################################################
+```{r}
 
 par(mfrow=c(1,1))
 par(mar=c(8,4,6,4))
@@ -150,54 +145,40 @@ corrplot(as.matrix(cornl),is.corr = F, method="circle", tl.srt=45,
          sig.level=0.995, addCoef.col="orange")
 # Aqui termina o procedimento
 stopCluster(cl)
+```
 
-######################################################################
-### Analisando 2 Variaveis
-######################################################################
+Através dessa análise podemos concluir que as variáveis observadas possuem alto grau de correlação não linear, sendo as maiores delas a nota de corte com relação ao investimento e o investimento com relação ao número de habitantes.
 
-resp = dados.rls$v1
-explic = dados.rls$v4
+# - Regressão Linear Simples
 
-######################################################################
-### Representacao Grafica
-######################################################################
+Nesta seção, faremos uma simples regressão linear entre as variáveis IDH e NOTADECORTE. Foram escolhidas essas variáveis pois são as que possuem maior índice de correlação linear.
 
+O código abaixo realiza o diagrama de dispersão dos referidos dados.
+
+```{r}
+resp = dados.rls$NOTACORTE
+explic = dados.rls$IDH
+# Gerando o gráfico
 par(mfrow=c(1,1))
 plot(explic, resp, main="Diagrama de Dispersão", 
-     xlab = "Variável v4", ylab = "Variável v1") 
-cov(explic, resp)
-cor(explic, resp)
+     xlab = "IDH", ylab = "NOTA DE CORTE") 
+```
 
-######################################################################
-### Estimando
-######################################################################
+Com o código abaixo, faremos uma estimativa da função linear que melhor se adequa aos dados. 
 
+```{r}
 (rls = lm(resp~explic))
+```
 
-######################################################################
-### Fazendo predicoes
-######################################################################
+Obtivemos portanto uma função do tipo $f(x) = 704.4x + 151.9$. Sendo $151.9$ a intersecção da reta com o eixo das ordenadas e $704.4$ a taxa de variação, ou seja, a cada aumento de $0.1$ no IDH, a nota de corte cresce, em média, $70.44$.
 
-(pred=predict(rls))
-(obs=dados.rls$v4)
-compara = cbind(obs, pred, obs-pred)
-head(compara)
-tail(compara)
+O código abaixo mostrará a reta definida pela função acima plotada no gráfico de dispersão.
 
-######################################################################
-### Representação Grafica da Performance
-######################################################################
-
+```{r}
 par(mar=c(6,4,4,4))
 plot(explic, resp)
 abline(rls)
-text(10,18,expression("Y = 1,056 + 1,118 X"))
-
-######################################################################
-### Analise de Variancia da Regressao
-######################################################################
-
-anova(rls)
-summary(rls)
-names(summary(rls))
+text(3,90,expression("f(x) = 704.4x + 151.9"))
 ```
+
+A reta não intercepta perfeitamente os pontos, entretanto é uma aproximação razoável para descrever as notas de corte em função do IDH.
