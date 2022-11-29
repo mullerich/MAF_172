@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Prof. Gérson Santos - IEF/UFV" />
+
+
+<title>O Fantástico Mundo do R - Parte VIII</title>
+
+<script src="libs/header-attrs-2.18/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="libs/navigation-1.1/tabsets.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">O Fantástico Mundo do R - Parte VIII</h1>
+<h4 class="author">Prof. Gérson Santos - IEF/UFV</h4>
+
+</div>
+
+
+<blockquote>
+<p><strong>ATENÇÃO:</strong> Antes de qualquer outra instrução devemos
+fazer 2 procedimentos:</p>
+<ol style="list-style-type: decimal">
+<li>Clicar em <code>File</code>, <code>Reopen with Encoding ...</code> e
+selecionar <code>UTF-8</code>;</li>
+<li>Clicar em <code>File</code>, <code>Save with Encoding ...</code> e
+selecionar a opção com os dizeres <code>System Default</code>.</li>
+</ol>
+</blockquote>
+<div id="diretório-de-trabalho" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> - Diretório de
+Trabalho</h1>
+<p><strong>Importante:</strong> Para configurar seu diretório de
+trabalho, clique em <code>Session</code>,
+<code>Set Working Directory</code> e <code>Choose Directory</code>.
+Então, navegue até sua pasta e clique em <code>Open</code>. O comando
+<code>setwd</code> que vai aparecer no Console do R deve ser copiado e
+colado no chunk abaixo:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()</span></code></pre></div>
+<pre><code>## [1] &quot;C:/Users/Usuario/Documents/Erich/GitHub/MAF_172/Semana 7&quot;</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># setwd(&quot;~/Documents/Erich/GitHub/MAF_172/Semana 7&quot;)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()</span></code></pre></div>
+<pre><code>## [1] &quot;C:/Users/Usuario/Documents/Erich/GitHub/MAF_172/Semana 7&quot;</code></pre>
+</div>
+<div id="machine-learning" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> - Machine Learning</h1>
+<div id="pacotes" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> - Pacotes</h2>
+<p>Em primeiro lugar faremos o carregamento dos pacotes que
+usaresmos:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;pacman&quot;)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pacman)</span></code></pre></div>
+<pre><code>## Warning: package &#39;pacman&#39; was built under R version 4.2.2</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">p_load</span>(<span class="at">char=</span><span class="fu">c</span>(<span class="st">&quot;DescTools&quot;</span>,<span class="st">&quot;readxl&quot;</span>,<span class="st">&quot;janitor&quot;</span>, <span class="st">&quot;psych&quot;</span>, <span class="st">&quot;corrr&quot;</span>, </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;ggplot2&quot;</span>, <span class="st">&quot;dplyr&quot;</span>, <span class="st">&quot;caret&quot;</span>, <span class="st">&quot;corrplot&quot;</span>,<span class="st">&quot;spatstat&quot;</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;maptools&quot;</span>, <span class="st">&quot;gstat&quot;</span>, <span class="st">&quot;foreign&quot;</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;geoR&quot;</span>,<span class="st">&quot;moments&quot;</span>,<span class="st">&quot;scatterplot3d&quot;</span>,<span class="st">&quot;tcltk2&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;sp&quot;</span>, <span class="st">&quot;rgdal&quot;</span>, <span class="st">&quot;raster&quot;</span>, <span class="st">&quot;doParallel&quot;</span>, <span class="st">&quot;GGally&quot;</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;lattice&quot;</span>, <span class="st">&quot;e1071&quot;</span>, <span class="st">&quot;rpart&quot;</span>, <span class="st">&quot;mlbench&quot;</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;randomForest&quot;</span>, <span class="st">&quot;party&quot;</span>, <span class="st">&quot;MASS&quot;</span>, <span class="st">&quot;vegan&quot;</span>))</span></code></pre></div>
+<pre><code>## Installing package into &#39;C:/Users/Usuario/AppData/Local/R/win-library/4.2&#39;
+## (as &#39;lib&#39; is unspecified)</code></pre>
+<pre><code>## Warning: unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.2:
+##   não foi possível abrir a URL &#39;http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.2/PACKAGES&#39;</code></pre>
+<pre><code>## package &#39;mlbench&#39; successfully unpacked and MD5 sums checked
+## 
+## The downloaded binary packages are in
+##  C:\Users\Usuario\AppData\Local\Temp\RtmpAL0yIJ\downloaded_packages</code></pre>
+<pre><code>## 
+## mlbench installed</code></pre>
+<pre><code>## Warning: package &#39;mlbench&#39; was built under R version 4.2.2</code></pre>
+<pre><code>## Installing package into &#39;C:/Users/Usuario/AppData/Local/R/win-library/4.2&#39;
+## (as &#39;lib&#39; is unspecified)</code></pre>
+<pre><code>## Warning: unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.2:
+##   não foi possível abrir a URL &#39;http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.2/PACKAGES&#39;</code></pre>
+<pre><code>## package &#39;randomForest&#39; successfully unpacked and MD5 sums checked
+## 
+## The downloaded binary packages are in
+##  C:\Users\Usuario\AppData\Local\Temp\RtmpAL0yIJ\downloaded_packages</code></pre>
+<pre><code>## 
+## randomForest installed</code></pre>
+<pre><code>## Warning: package &#39;randomForest&#39; was built under R version 4.2.2</code></pre>
+<pre><code>## Installing package into &#39;C:/Users/Usuario/AppData/Local/R/win-library/4.2&#39;
+## (as &#39;lib&#39; is unspecified)</code></pre>
+<pre><code>## also installing the dependencies &#39;TH.data&#39;, &#39;libcoin&#39;, &#39;matrixStats&#39;, &#39;multcomp&#39;, &#39;modeltools&#39;, &#39;strucchange&#39;, &#39;coin&#39;, &#39;sandwich&#39;</code></pre>
+<pre><code>## Warning: unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.2:
+##   não foi possível abrir a URL &#39;http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.2/PACKAGES&#39;</code></pre>
+<pre><code>## package &#39;TH.data&#39; successfully unpacked and MD5 sums checked
+## package &#39;libcoin&#39; successfully unpacked and MD5 sums checked
+## package &#39;matrixStats&#39; successfully unpacked and MD5 sums checked
+## package &#39;multcomp&#39; successfully unpacked and MD5 sums checked
+## package &#39;modeltools&#39; successfully unpacked and MD5 sums checked
+## package &#39;strucchange&#39; successfully unpacked and MD5 sums checked
+## package &#39;coin&#39; successfully unpacked and MD5 sums checked
+## package &#39;sandwich&#39; successfully unpacked and MD5 sums checked
+## package &#39;party&#39; successfully unpacked and MD5 sums checked
+## 
+## The downloaded binary packages are in
+##  C:\Users\Usuario\AppData\Local\Temp\RtmpAL0yIJ\downloaded_packages</code></pre>
+<pre><code>## 
+## party installed</code></pre>
+<pre><code>## Warning: package &#39;party&#39; was built under R version 4.2.2</code></pre>
+<pre><code>## Warning: package &#39;strucchange&#39; was built under R version 4.2.2</code></pre>
+<pre><code>## Warning: package &#39;zoo&#39; was built under R version 4.2.2</code></pre>
+<pre><code>## Warning: package &#39;sandwich&#39; was built under R version 4.2.2</code></pre>
+<pre><code>## Installing package into &#39;C:/Users/Usuario/AppData/Local/R/win-library/4.2&#39;
+## (as &#39;lib&#39; is unspecified)</code></pre>
+<pre><code>## also installing the dependency &#39;permute&#39;</code></pre>
+<pre><code>## Warning: unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.2:
+##   não foi possível abrir a URL &#39;http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.2/PACKAGES&#39;</code></pre>
+<pre><code>## package &#39;permute&#39; successfully unpacked and MD5 sums checked
+## package &#39;vegan&#39; successfully unpacked and MD5 sums checked
+## 
+## The downloaded binary packages are in
+##  C:\Users\Usuario\AppData\Local\Temp\RtmpAL0yIJ\downloaded_packages</code></pre>
+<pre><code>## 
+## vegan installed</code></pre>
+<pre><code>## Warning: package &#39;vegan&#39; was built under R version 4.2.2</code></pre>
+<pre><code>## Warning: package &#39;permute&#39; was built under R version 4.2.2</code></pre>
+</div>
+<div id="support-vector-machine---classificação" class="section level2"
+number="2.2">
+<h2><span class="header-section-number">2.2</span> - Support Vector
+Machine - Classificação</h2>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Glass, <span class="at">package=</span><span class="st">&quot;mlbench&quot;</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Glass)</span></code></pre></div>
+<pre><code>##        RI    Na   Mg   Al    Si    K   Ca Ba   Fe Type
+## 1 1.52101 13.64 4.49 1.10 71.78 0.06 8.75  0 0.00    1
+## 2 1.51761 13.89 3.60 1.36 72.73 0.48 7.83  0 0.00    1
+## 3 1.51618 13.53 3.55 1.54 72.99 0.39 7.78  0 0.00    1
+## 4 1.51766 13.21 3.69 1.29 72.61 0.57 8.22  0 0.00    1
+## 5 1.51742 13.27 3.62 1.24 73.08 0.55 8.07  0 0.00    1
+## 6 1.51596 12.79 3.61 1.62 72.97 0.64 8.07  0 0.26    1</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(Glass)</span></code></pre></div>
+<pre><code>##          RI    Na Mg   Al    Si    K   Ca   Ba Fe Type
+## 209 1.51640 14.37  0 2.74 72.85 0.00 9.45 0.54  0    7
+## 210 1.51623 14.14  0 2.88 72.61 0.08 9.18 1.06  0    7
+## 211 1.51685 14.92  0 1.99 73.06 0.00 8.40 1.59  0    7
+## 212 1.52065 14.36  0 2.02 73.42 0.00 8.44 1.64  0    7
+## 213 1.51651 14.38  0 1.94 73.61 0.00 8.48 1.57  0    7
+## 214 1.51711 14.23  0 2.08 73.36 0.00 8.62 1.67  0    7</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="do">## split data into a train and test set</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>index     <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Glass)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>testindex <span class="ot">&lt;-</span> <span class="fu">sample</span>(index, <span class="fu">trunc</span>(<span class="fu">length</span>(index)<span class="sc">/</span><span class="dv">3</span>))</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>testset   <span class="ot">&lt;-</span> Glass[testindex,]</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>trainset  <span class="ot">&lt;-</span> Glass[<span class="sc">-</span>testindex,]</span></code></pre></div>
+<p>Vamos ajustar o modelo de aprendizagem e fazer a predição ainda no
+banco de treinamento (<strong>lembrando que a variável resposta é a
+coluna 10</strong>):</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="do">## svm</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>svm.model <span class="ot">&lt;-</span> <span class="fu">svm</span>(Type <span class="sc">~</span> ., <span class="at">data =</span> trainset, <span class="at">cost =</span> <span class="dv">100</span>, <span class="at">gamma =</span> <span class="dv">1</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>svm.pred  <span class="ot">&lt;-</span> <span class="fu">predict</span>(svm.model, testset[,<span class="sc">-</span><span class="dv">10</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="do">## rpart</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>rpart.model <span class="ot">&lt;-</span> <span class="fu">rpart</span>(Type <span class="sc">~</span> ., <span class="at">data =</span> trainset)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>rpart.pred  <span class="ot">&lt;-</span> <span class="fu">predict</span>(rpart.model, testset[,<span class="sc">-</span><span class="dv">10</span>], <span class="at">type =</span> <span class="st">&quot;class&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute svm confusion matrix</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="at">pred =</span> svm.pred, <span class="at">true =</span> testset[,<span class="dv">10</span>])</span></code></pre></div>
+<pre><code>##     true
+## pred  1  2  3  5  6  7
+##    1 17  4  2  0  0  0
+##    2  6 22  1  7  1  2
+##    3  2  0  0  0  0  0
+##    5  0  0  0  0  0  0
+##    6  0  0  0  0  2  0
+##    7  0  0  0  0  0  5</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute rpart confusion matrix</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="at">pred =</span> rpart.pred, <span class="at">true =</span> testset[,<span class="dv">10</span>])</span></code></pre></div>
+<pre><code>##     true
+## pred  1  2  3  5  6  7
+##    1 18  3  2  0  0  1
+##    2  7 20  0  0  0  0
+##    3  0  1  1  0  1  0
+##    5  0  2  0  7  2  0
+##    6  0  0  0  0  0  0
+##    7  0  0  0  0  0  6</code></pre>
+</div>
+<div id="support-vector-machine---regression" class="section level2"
+number="2.3">
+<h2><span class="header-section-number">2.3</span> - Support Vector
+Machine - Regression</h2>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Ozone, <span class="at">package=</span><span class="st">&quot;mlbench&quot;</span>)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="do">## split data into a train and test set</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>index     <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Ozone)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>testindex <span class="ot">&lt;-</span> <span class="fu">sample</span>(index, <span class="fu">trunc</span>(<span class="fu">length</span>(index)<span class="sc">/</span><span class="dv">3</span>))</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>testset   <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(Ozone[testindex,<span class="sc">-</span><span class="dv">3</span>])</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>trainset  <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(Ozone[<span class="sc">-</span>testindex,<span class="sc">-</span><span class="dv">3</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="do">## svm</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>svm.model <span class="ot">&lt;-</span> <span class="fu">svm</span>(V4 <span class="sc">~</span> ., <span class="at">data =</span> trainset, <span class="at">cost =</span> <span class="dv">1000</span>, <span class="at">gamma =</span> <span class="fl">0.0001</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>svm.pred  <span class="ot">&lt;-</span> <span class="fu">predict</span>(svm.model, testset[,<span class="sc">-</span><span class="dv">3</span>])</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="fu">crossprod</span>(svm.pred <span class="sc">-</span> testset[,<span class="dv">3</span>]) <span class="sc">/</span> <span class="fu">length</span>(testindex)</span></code></pre></div>
+<pre><code>##          [,1]
+## [1,] 10.97352</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="do">## rpart</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>rpart.model <span class="ot">&lt;-</span> <span class="fu">rpart</span>(V4 <span class="sc">~</span> ., <span class="at">data =</span> trainset)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>rpart.pred  <span class="ot">&lt;-</span> <span class="fu">predict</span>(rpart.model, testset[,<span class="sc">-</span><span class="dv">3</span>])</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="fu">crossprod</span>(rpart.pred <span class="sc">-</span> testset[,<span class="dv">3</span>]) <span class="sc">/</span> <span class="fu">length</span>(testindex)</span></code></pre></div>
+<pre><code>##         [,1]
+## [1,] 25.9026</code></pre>
+</div>
+<div id="random-forest---classificação" class="section level2"
+number="2.4">
+<h2><span class="header-section-number">2.4</span> - Random Forest -
+Classificação</h2>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(readingSkills)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(readingSkills)</span></code></pre></div>
+<pre><code>##   nativeSpeaker age shoeSize    score
+## 1           yes   5 24.83189 32.29385
+## 2           yes   6 25.95238 36.63105
+## 3            no  11 30.42170 49.60593
+## 4           yes   7 28.66450 40.28456
+## 5           yes  11 31.88207 55.46085
+## 6           yes  10 30.07843 52.83124</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(readingSkills)</span></code></pre></div>
+<pre><code>##     nativeSpeaker age shoeSize    score
+## 195           yes  10 29.48948 50.39916
+## 196            no   8 26.44756 37.54887
+## 197           yes   5 23.98370 32.17017
+## 198           yes   7 27.94532 40.38110
+## 199            no   7 26.89888 33.63669
+## 200            no   8 26.70672 38.68543</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the forest</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>output.forest <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(nativeSpeaker <span class="sc">~</span> age <span class="sc">+</span> shoeSize <span class="sc">+</span> score, </span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> readingSkills)</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View the forest results</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(output.forest) </span></code></pre></div>
+<pre><code>## 
+## Call:
+##  randomForest(formula = nativeSpeaker ~ age + shoeSize + score,      data = readingSkills) 
+##                Type of random forest: classification
+##                      Number of trees: 500
+## No. of variables tried at each split: 1
+## 
+##         OOB estimate of  error rate: 1%
+## Confusion matrix:
+##     no yes class.error
+## no  98   2        0.02
+## yes  0 100        0.00</code></pre>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Importance of each predictor</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">importance</span>(output.forest,<span class="at">type =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>##          MeanDecreaseGini
+## age              13.56604
+## shoeSize         18.86010
+## score            57.44457</code></pre>
+<p><strong>Obs.:</strong> Apenas 1% de erro.</p>
+</div>
+<div id="random-forest---regressão" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> - Random Forest -
+Regressão</h2>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Boston)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Boston)</span></code></pre></div>
+<pre><code>##      crim zn indus chas   nox    rm  age    dis rad tax ptratio  black lstat
+## 1 0.00632 18  2.31    0 0.538 6.575 65.2 4.0900   1 296    15.3 396.90  4.98
+## 2 0.02731  0  7.07    0 0.469 6.421 78.9 4.9671   2 242    17.8 396.90  9.14
+## 3 0.02729  0  7.07    0 0.469 7.185 61.1 4.9671   2 242    17.8 392.83  4.03
+## 4 0.03237  0  2.18    0 0.458 6.998 45.8 6.0622   3 222    18.7 394.63  2.94
+## 5 0.06905  0  2.18    0 0.458 7.147 54.2 6.0622   3 222    18.7 396.90  5.33
+## 6 0.02985  0  2.18    0 0.458 6.430 58.7 6.0622   3 222    18.7 394.12  5.21
+##   medv
+## 1 24.0
+## 2 21.6
+## 3 34.7
+## 4 33.4
+## 5 36.2
+## 6 28.7</code></pre>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(Boston)</span></code></pre></div>
+<pre><code>##        crim zn indus chas   nox    rm  age    dis rad tax ptratio  black lstat
+## 501 0.22438  0  9.69    0 0.585 6.027 79.7 2.4982   6 391    19.2 396.90 14.33
+## 502 0.06263  0 11.93    0 0.573 6.593 69.1 2.4786   1 273    21.0 391.99  9.67
+## 503 0.04527  0 11.93    0 0.573 6.120 76.7 2.2875   1 273    21.0 396.90  9.08
+## 504 0.06076  0 11.93    0 0.573 6.976 91.0 2.1675   1 273    21.0 396.90  5.64
+## 505 0.10959  0 11.93    0 0.573 6.794 89.3 2.3889   1 273    21.0 393.45  6.48
+## 506 0.04741  0 11.93    0 0.573 6.030 80.8 2.5050   1 273    21.0 396.90  7.88
+##     medv
+## 501 16.8
+## 502 22.4
+## 503 20.6
+## 504 23.9
+## 505 22.0
+## 506 11.9</code></pre>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1341</span>)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>BH.rf <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(medv <span class="sc">~</span> ., Boston)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(BH.rf)</span></code></pre></div>
+<pre><code>## 
+## Call:
+##  randomForest(formula = medv ~ ., data = Boston) 
+##                Type of random forest: regression
+##                      Number of trees: 500
+## No. of variables tried at each split: 4
+## 
+##           Mean of squared residuals: 10.34864
+##                     % Var explained: 87.74</code></pre>
+<blockquote>
+<p>Particionando os dados</p>
+</blockquote>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>intrain <span class="ot">=</span> <span class="fu">createDataPartition</span>(Boston<span class="sc">$</span>medv, <span class="at">p =</span> <span class="fl">0.75</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>treino <span class="ot">=</span> Boston[intrain,]</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>valida <span class="ot">=</span> Boston[<span class="sc">-</span>intrain,]</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>fit.rf <span class="ot">=</span> <span class="fu">randomForest</span>(medv<span class="sc">~</span>., <span class="at">data =</span> treino)</span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>fit.rf</span></code></pre></div>
+<pre><code>## 
+## Call:
+##  randomForest(formula = medv ~ ., data = treino) 
+##                Type of random forest: regression
+##                      Number of trees: 500
+## No. of variables tried at each split: 4
+## 
+##           Mean of squared residuals: 10.33751
+##                     % Var explained: 87.32</code></pre>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">varImpPlot</span>(fit.rf)</span></code></pre></div>
+<p><img
+src="UseR-8-ML_files/figure-html/unnamed-chunk-13-1.png" /><!-- --></p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">=</span> <span class="fu">predict</span>(fit.rf,valida)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(v, valida<span class="sc">$</span>medv)</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p><img
+src="UseR-8-ML_files/figure-html/unnamed-chunk-13-2.png" /><!-- --></p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">postResample</span>(v, valida<span class="sc">$</span>medv)</span></code></pre></div>
+<pre><code>##      RMSE  Rsquared       MAE 
+## 3.5851617 0.8680898 2.3151151</code></pre>
+</div>
+</div>
+<div id="treinando-em-extratrees" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> - Treinando em
+ExtraTrees</h1>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ## Installing:</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;extraTrees&quot;)</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ## Loading ExtraTrees:</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="co"># library(&quot;extraTrees&quot;)</span></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ## Generating artificial data:</span></span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a><span class="co"># n &lt;- 1000  ## number of samples</span></span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a><span class="co"># p &lt;- 5     ## number of dimensions</span></span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ## x - inputs</span></span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a><span class="co"># ## y - outputs to predict</span></span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a><span class="co"># x &lt;- matrix(runif(n*p), n, p)</span></span>
+<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a><span class="co"># y &lt;- (x[,1]&gt;0.5) + 0.8*(x[,2]&gt;0.6) + 0.5*(x[,3]&gt;0.4) +</span></span>
+<span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a><span class="co">#      0.1*runif(nrow(x))</span></span>
+<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a><span class="co"># ## Training and predicting with ExtraTrees:</span></span>
+<span id="cb70-14"><a href="#cb70-14" aria-hidden="true" tabindex="-1"></a><span class="co"># et &lt;- extraTrees(x, y)</span></span>
+<span id="cb70-15"><a href="#cb70-15" aria-hidden="true" tabindex="-1"></a><span class="co"># yhat &lt;- predict(et, x)</span></span></code></pre></div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "libs/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
