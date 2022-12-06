@@ -1,0 +1,190 @@
+---
+title: "Segunda Avaliação de MAF 172"
+author: "Prof. Gérson Santos - Matrícula: 10.306"
+fig_caption: yes
+output:
+  html_document:
+    highlight: pygments
+    keep_md: yes
+    lib_dir: libs
+    mathjax: local
+    number_sections: yes
+    self_contained: no
+    theme: cerulean
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+fig_width: 7
+header-includes: \usepackage{bbm}
+fig_height: 7
+editor_options:
+  chunk_output_type: console
+---
+
+> **ATENÇÃO:**
+> Antes de qualquer outra instrução devemos fazer 2 procedimentos:
+> 
+> 1. Clicar em `File`, `Reopen with Encoding ...` e selecionar `UTF-8`;
+> 2. Clicar em `File`, `Save with Encoding ...` e selecionar a opção com os dizeres `System Default`.
+
+# - Diretório de Trabalho
+
+**Importante:** Para configurar seu diretório de trabalho, clique em `Session`, `Set Working Directory` e `Choose Directory`. Então, navegue até sua pasta e clique em `Open`. O comando `setwd` que vai aparecer no Console do R deve ser copiado e colado no chunk abaixo:
+
+```{r}
+getwd()
+setwd("~/Documents/_______UFV - FLORESTAL/___MAF 172/MAF 172 - AULA 08")
+getwd()
+```
+
+# - Machine Learning
+
+## - Pacotes
+
+Em primeiro lugar faremos o carregamento dos pacotes que usaresmos:
+
+```{r}
+# install.packages("pacman")
+library(pacman)
+p_load(char=c("DescTools","readxl","janitor", "psych", "corrr", 
+              "ggplot2", "dplyr", "caret", "corrplot","spatstat",
+              "maptools", "gstat", "foreign",
+              "geoR","moments","scatterplot3d","tcltk2",
+              "sp", "rgdal", "raster", "doParallel", "GGally",
+              "lattice", "e1071", "rpart", "mlbench",
+              "randomForest", "party", "MASS", "vegan"))
+```
+
+## - Support Vector Machine - Classificação
+
+```{r}
+data(Glass, package="mlbench")
+head(Glass)
+tail(Glass)
+## split data into a train and test set
+index     <- 1:nrow(Glass)
+testindex <- sample(index, trunc(length(index)/3))
+testset   <- Glass[testindex,]
+trainset  <- Glass[-testindex,]
+```
+
+Vamos ajustar o modelo de aprendizagem e fazer a predição ainda no banco de treinamento (**lembrando que a variável resposta é a coluna 10**):
+
+```{r}
+## svm
+svm.model <- svm(Type ~ ., data = trainset, cost = 100, gamma = 1)
+svm.pred  <- predict(svm.model, testset[,-10])
+```
+
+```{r}
+## rpart
+rpart.model <- rpart(Type ~ ., data = trainset)
+rpart.pred  <- predict(rpart.model, testset[,-10], type = "class")
+```
+
+```{r}
+# compute svm confusion matrix
+table(pred = svm.pred, true = testset[,10])
+```
+
+```{r}
+# compute rpart confusion matrix
+table(pred = rpart.pred, true = testset[,10])
+```
+
+## - Support Vector Machine - Regression
+
+```{r}
+data(Ozone, package="mlbench")
+## split data into a train and test set
+index     <- 1:nrow(Ozone)
+testindex <- sample(index, trunc(length(index)/3))
+testset   <- na.omit(Ozone[testindex,-3])
+trainset  <- na.omit(Ozone[-testindex,-3])
+```
+
+
+```{r}
+## svm
+svm.model <- svm(V4 ~ ., data = trainset, cost = 1000, gamma = 0.0001)
+svm.pred  <- predict(svm.model, testset[,-3])
+crossprod(svm.pred - testset[,3]) / length(testindex)
+```
+
+```{r}
+## rpart
+rpart.model <- rpart(V4 ~ ., data = trainset)
+rpart.pred  <- predict(rpart.model, testset[,-3])
+crossprod(rpart.pred - testset[,3]) / length(testindex)
+```
+
+## - Random Forest - Classificação
+
+```{r}
+data(readingSkills)
+head(readingSkills)
+tail(readingSkills)
+# Create the forest
+output.forest <- randomForest(nativeSpeaker ~ age + shoeSize + score, 
+           data = readingSkills)
+# View the forest results
+print(output.forest) 
+# Importance of each predictor
+importance(output.forest,type = 2)
+```
+
+**Obs.:** Apenas 1% de erro.
+
+## - Random Forest - Regressão
+
+```{r}
+data(Boston)
+head(Boston)
+tail(Boston)
+set.seed(1341)
+BH.rf <- randomForest(medv ~ ., Boston)
+print(BH.rf)
+```
+
+> Particionando os dados
+
+```{r}
+set.seed(100)
+intrain = createDataPartition(Boston$medv, p = 0.75, list = FALSE)
+treino = Boston[intrain,]
+valida = Boston[-intrain,]
+set.seed(100)
+fit.rf = randomForest(medv~., data = treino)
+fit.rf
+varImpPlot(fit.rf)
+v = predict(fit.rf,valida)
+plot(v, valida$medv)
+abline(0,1,col = "red")
+postResample(v, valida$medv)
+```
+
+# - Treinando em ExtraTrees
+
+```{r}
+# ## Installing:
+# install.packages("extraTrees")
+# ## Loading ExtraTrees:
+# library("extraTrees")
+# ## Generating artificial data:
+# n <- 1000  ## number of samples
+# p <- 5     ## number of dimensions
+# ## x - inputs
+# ## y - outputs to predict
+# x <- matrix(runif(n*p), n, p)
+# y <- (x[,1]>0.5) + 0.8*(x[,2]>0.6) + 0.5*(x[,3]>0.4) +
+#      0.1*runif(nrow(x))
+# ## Training and predicting with ExtraTrees:
+# et <- extraTrees(x, y)
+# yhat <- predict(et, x)
+```
+
